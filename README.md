@@ -12,15 +12,13 @@
 
 ## 使用说明
 
-- **数据库文件目录为```static-files/my_blog_db.sql```，与原 My-Blog 项目的 SQL 文件有一些小差别；**
+- **数据库文件目录为```static-files/blog_db.sql```，替换了原来的用户表**
 
 - **部署后你可以根据自己需求修改版权文案、logo 图片、备案记录等网站基础信息；**
 
-- **My Blog layui 后台管理系统的默认登陆账号为 admin 默认登陆密码为 000000；**
+- **My Blog layui 后台管理系统的目前默认账户是admin，admin**
 
 - **有任何问题都可以反馈给我们，我们会尽量完善该项目。**
-
-## 十三的感想
 
 
 ## 联系作者
@@ -42,40 +40,11 @@
 
 	![dashboard](static-files/dashboard.png)
 
-- 文章管理
-
-	![blog-list](static-files/blog-list.png)
-
-- 文章编辑
-
-	![edit](static-files/edit.png)
-
-- 评论管理
-
-	![comment-list](static-files/comment-list.png)
-
-- 系统配置
-
-	![config](static-files/config.png)
-
 ### 博客展示页面
 
 - 首页
 
   ![index03](static-files/index03.png)
-
-- 文章浏览
-
-  ![detail03](static-files/detail03.png)
-
-- 友情链接
-
-  ![link03](static-files/link03.png)
-  
-- 评论版块
-
-  ![comment](static-files/comment.png)
-
 ## 感谢
 
-- [ZHENFENG13](https://github.com/ZHENFENG13)
+- [ZHENFENG13](https://github.com/ZHENFENG13/My-Blog-layui)
