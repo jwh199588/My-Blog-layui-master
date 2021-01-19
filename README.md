@@ -1,7 +1,5 @@
 # My-Blog-layui
 
-![personal-blog](static-files/personal-blog.png)
-
 **坚持不易，各位朋友如果觉得项目还不错的话可以给项目一个 star 吧，也是对我们一直更新代码的一种鼓励啦，谢谢各位的支持。**
 
 - **该项目基于原 [My-Blog-layui](https://github.com/ZHENFENG13/My-Blog-layui) 项目二次开发的 Spring Boot 实践项目，后台和博客的分页and评论采用全新的 layui 进行重构；**
