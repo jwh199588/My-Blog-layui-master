@@ -35,8 +35,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .logout().logoutUrl("/logout").logoutSuccessUrl("/login")
                 .and()
-                .sessionManagement()    //添加session管理器
-                .invalidSessionUrl("/login") //Session失效后跳转到这个链接;
+                .sessionManagement()
+                .invalidSessionStrategy(new CustomInvalidSessionStrategy())//添加session管理器
                 .maximumSessions(1)  //最大只能允许一个登录
                 .expiredSessionStrategy(new CustomSessionInformationExpiredStrategy());
         //必须允许所有用户访问我们的登录页（例如未验证的用户，否则验证流程就会进入死循环）

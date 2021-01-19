@@ -1,24 +1,23 @@
 package com.site.blog.controller.admin;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.site.blog.constants.*;
-import com.site.blog.pojo.dto.Result;
+import com.site.blog.constants.DeleteStatusEnum;
+import com.site.blog.constants.HttpStatusEnum;
+import com.site.blog.constants.SessionConstants;
+import com.site.blog.constants.SysConfigConstants;
 import com.site.blog.entity.*;
+import com.site.blog.pojo.dto.Result;
 import com.site.blog.service.*;
-import com.site.blog.util.MD5Utils;
 import com.site.blog.util.ResultGenerator;
-import com.site.blog.util.UploadFileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import java.io.File;
-import java.io.IOException;
-import java.net.URISyntaxException;
 
 /**
  * @qq交流群 796794009
@@ -31,8 +30,6 @@ import java.net.URISyntaxException;
 public class AdminController {
 
     @Autowired
-    private AdminUserService adminUserService;
-    @Autowired
     private BlogInfoService blogInfoService;
     @Autowired
     private BlogTagService blogTagService;
@@ -44,6 +41,9 @@ public class AdminController {
     private BlogConfigService blogConfigService;
     @Autowired
     private BlogLinkService blogLinkService;
+
+    @Autowired
+    private TbSecUserService tbSecUserService;
 
 
     /**
@@ -104,18 +104,16 @@ public class AdminController {
     @PostMapping("/v1/userInfo")
     public Result<String> userInfoUpdate(HttpSession session,String userName, String newPwd,
                                  String nickName) {
-        if (StringUtils.isEmpty(newPwd) || StringUtils.isEmpty(nickName)) {
+        if (StringUtils.isEmpty(userName) ||StringUtils.isEmpty(newPwd) || StringUtils.isEmpty(nickName)) {
             return ResultGenerator.getResultByHttp(HttpStatusEnum.BAD_REQUEST);
         }
-        Integer loginUserId = (int) session.getAttribute(SessionConstants.LOGIN_USER_ID);
-        AdminUser adminUser = new AdminUser()
-                .setAdminUserId(loginUserId)
-                .setLoginUserName(userName)
-                .setNickName(nickName)
-                .setLoginPassword(MD5Utils.MD5Encode(newPwd, "UTF-8"));
-        if (adminUserService.updateUserInfo(adminUser)) {
+
+        SecUser secUser = new SecUser(userName,newPwd,"ROLE_USER");
+        secUser.setNickName(nickName);
+
+        if (tbSecUserService.updateUserInfo(secUser)) {
             //修改成功后清空session中的数据，前端控制跳转至登录页
-            return ResultGenerator.getResultByHttp(HttpStatusEnum.OK,"/admin/v1/logout");
+            return ResultGenerator.getResultByHttp(HttpStatusEnum.OK,"/login");
         } else {
             return ResultGenerator.getResultByHttp(HttpStatusEnum.INTERNAL_SERVER_ERROR);
         }

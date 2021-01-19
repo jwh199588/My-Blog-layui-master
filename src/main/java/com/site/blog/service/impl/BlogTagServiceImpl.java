@@ -18,6 +18,7 @@ import com.site.blog.service.BlogTagService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -54,7 +55,7 @@ public class BlogTagServiceImpl extends ServiceImpl<BlogTagMapper, BlogTag> impl
                         .setTagName(blogTag.getTagName())
                         .setTagCount(
                                 blogTagRelationService.count(new QueryWrapper<BlogTagRelation>()
-                                        .lambda().eq(BlogTagRelation::getTagId,blogTag.getTagId()))
+                                        .lambda().eq(BlogTagRelation::getTagId, blogTag.getTagId()))
                         )).collect(Collectors.toList());
         return blogTagCounts;
     }
@@ -63,25 +64,33 @@ public class BlogTagServiceImpl extends ServiceImpl<BlogTagMapper, BlogTag> impl
     @Override
     public boolean clearTag(Integer tagId) {
         LambdaQueryWrapper<BlogTagRelation> queryWrapper = Wrappers.<BlogTagRelation>lambdaQuery()
-                .eq(BlogTagRelation::getTagId,tagId);
+                .eq(BlogTagRelation::getTagId, tagId);
         List<BlogTagRelation> tagRelationList = blogTagRelationService.list(queryWrapper);
-        // 批量更新的BlogInfo信息
-        List<BlogInfo> infoList = tagRelationList.stream()
-                .map(tagRelation -> new BlogInfo()
-                        .setBlogId(tagRelation.getBlogId())
-                        .setBlogTags(SysConfigConstants.DEFAULT_TAG.getConfigName())).collect(Collectors.toList());
-        List<Long> blogIds = infoList.stream().map(BlogInfo::getBlogId).collect(Collectors.toList());
-        // 批量更新的tagRelation信息
-        List<BlogTagRelation> tagRelations = tagRelationList.stream()
-                .map(tagRelation -> new BlogTagRelation()
-                        .setBlogId(tagRelation.getBlogId())
-                        .setTagId(Integer.valueOf(SysConfigConstants.DEFAULT_CATEGORY.getConfigField())))
-                .collect(Collectors.toList());
-        blogInfoService.updateBatchById(infoList);
-        blogTagRelationService.remove(new QueryWrapper<BlogTagRelation>()
-                .lambda()
-                .in(BlogTagRelation::getBlogId,blogIds));
-        blogTagRelationService.saveBatch(tagRelations);
+
+        if (!CollectionUtils.isEmpty(tagRelationList)) {
+            // 批量更新的BlogInfo信息
+            List<BlogInfo> infoList = tagRelationList.stream()
+                    .map(tagRelation -> new BlogInfo()
+                            .setBlogId(tagRelation.getBlogId())
+                            .setBlogTags(SysConfigConstants.DEFAULT_TAG.getConfigName())).collect(Collectors.toList());
+            if (!CollectionUtils.isEmpty(infoList)) {
+                blogInfoService.updateBatchById(infoList);
+            }
+
+            List<Long> blogIds = infoList.stream().map(BlogInfo::getBlogId).collect(Collectors.toList());
+            // 批量更新的tagRelation信息
+            List<BlogTagRelation> tagRelations = tagRelationList.stream()
+                    .map(tagRelation -> new BlogTagRelation()
+                            .setBlogId(tagRelation.getBlogId())
+                            .setTagId(Integer.valueOf(SysConfigConstants.DEFAULT_CATEGORY.getConfigField())))
+                    .collect(Collectors.toList());
+
+            blogTagRelationService.remove(new QueryWrapper<BlogTagRelation>()
+                    .lambda()
+                    .in(BlogTagRelation::getBlogId, blogIds));
+            blogTagRelationService.saveBatch(tagRelations);
+        }
+
         return retBool(baseMapper.deleteById(tagId));
     }
 }

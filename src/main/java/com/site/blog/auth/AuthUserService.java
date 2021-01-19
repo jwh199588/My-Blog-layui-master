@@ -2,10 +2,10 @@ package com.site.blog.auth;
 
 
 import com.site.blog.entity.SecUser;
+import com.site.blog.pojo.dto.LoginUser;
 import com.site.blog.service.TbSecUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -33,8 +33,11 @@ public class AuthUserService implements UserDetailsService {
         for (String role : roles) {
             simpleGrantedAuthorities.add(new SimpleGrantedAuthority(role));
         }
+        LoginUser loginUser = new LoginUser(oneSecUser.getUsername(), oneSecUser.getPassword(), simpleGrantedAuthorities);
+        loginUser.setNickName(oneSecUser.getNickName());
+
         // 交给security进行验证并返回
-        return new User(oneSecUser.getUsername(), oneSecUser.getPassword(), simpleGrantedAuthorities);
+        return loginUser;
     }
 
 

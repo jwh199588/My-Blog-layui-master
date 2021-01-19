@@ -2,6 +2,8 @@ package com.site.blog.auth;
 
 import com.site.blog.constants.SessionConstants;
 import com.site.blog.constants.SysConfigConstants;
+import com.site.blog.entity.SecUser;
+import com.site.blog.pojo.dto.LoginUser;
 import com.site.blog.service.BlogConfigService;
 import com.site.blog.service.impl.BlogConfigServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,12 +49,13 @@ public class CustomAuthenticationSuccessHandler extends SimpleUrlAuthenticationS
             throws IOException {
         // 登录成功后，进行数据处理
         System.out.println("用户登录成功啦！！！");
-        User principal = (User) authentication.getPrincipal();
+        LoginUser principal = (LoginUser) authentication.getPrincipal();
         System.out.println(principal.getUsername());
 
         HttpSession session = request.getSession();
-        session.setAttribute(SessionConstants.LOGIN_USER, principal.getUsername());
+        session.setAttribute(SessionConstants.LOGIN_USER, principal.getNickName());
         session.setAttribute(SessionConstants.LOGIN_USER_NAME, principal.getUsername());
+        session.setAttribute(SessionConstants.LOGIN_USER_ID, principal.getUsername());
 
         //处理完成后，跳转回原请求URL
         handle(request, response, authentication);

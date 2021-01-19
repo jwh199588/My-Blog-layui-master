@@ -1,13 +1,9 @@
 package com.site.blog.entity;
 
-import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.User;
 
 import java.io.Serializable;
-import java.util.Collection;
 
 /**
  * <p>
@@ -22,11 +18,9 @@ public class SecUser implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    public SecUser(){
 
-    }
+    public SecUser(String username, String password, String userRoles) {
 
-    public SecUser(String username,String password,String userRoles){
         this.username = username;
         this.password = password;
         this.userRoles = userRoles;
@@ -40,7 +34,6 @@ public class SecUser implements Serializable {
      */
     @TableField("user_roles")
     private String userRoles;
-
 
     @TableField("nick_name")
     private String nickName;
@@ -61,23 +54,26 @@ public class SecUser implements Serializable {
         return nickName;
     }
 
-    public void setNickName(String nickName) {
+    public SecUser setNickName(String nickName) {
         this.nickName = nickName;
+        return this;
     }
 
     public String getUsername() {
         return username;
     }
 
-    public void setUsername(String username) {
+    public SecUser setUsername(String username) {
         this.username = username;
+        return this;
     }
 
     public String getPassword() {
         return password;
     }
 
-    public void setPassword(String password) {
+    public SecUser setPassword(String password) {
         this.password = password;
+        return this;
     }
 }

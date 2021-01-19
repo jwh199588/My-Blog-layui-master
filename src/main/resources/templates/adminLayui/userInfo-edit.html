@@ -46,7 +46,7 @@
                 <label for="L_userName" class="layui-form-label">
                     <span class="x-red">*</span>登录名</label>
                 <div class="layui-input-inline">
-                    <input type="text" id="L_userName" name="userName" lay-verify="required"
+                    <input type="text" id="L_userName" name="userName" lay-verify="required" readonly="true"
                            autocomplete="off" class="layui-input" th:value="${session.loginUserName}"></div>
             </div>
             <div class="layui-form-item">
@@ -131,11 +131,12 @@
             oldPwd: function (value, item) {
                 var resultCode;
                 $.ajax({
-                    url: "/admin/v1/password",
+                    url: "/login/verifyPassword",
                     type: "GET",
                     async: false,       //关闭异步
                     data: {"oldPwd": value},
                     success: function (s) {
+                        debugger
                         resultCode = s.resultCode;
                     }
                 });

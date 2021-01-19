@@ -2,12 +2,12 @@ server:
   port: 28084
   servlet:
     session:
-      timeout: 60
+      timeout: 10000
 
 spring:
   datasource:
     name: myBlog
-    url: jdbc:mysql://121.37.17.42:3306/blog_db?serverTimezone=UTC&useUnicode=true&characterEncoding=utf8&characterSetResults=utf8&useSSL=false
+    url: jdbc:mysql://localhost:3306/blog_db?serverTimezone=UTC&useUnicode=true&characterEncoding=utf8&characterSetResults=utf8&useSSL=false
     username: root
     password: 12345
     type: com.alibaba.druid.pool.DruidDataSource
